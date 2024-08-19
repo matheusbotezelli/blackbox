@@ -1,11 +1,10 @@
-import {StatusBar} from 'expo-status-bar';
 import {Button, StyleSheet, View} from 'react-native';
+import {ScanDevices} from "./src/modules/BluetoothModule";
 
 export default function App() {
     return (
         <View style={styles.container}>
-            <Button title="Press"></Button>
-            <StatusBar style="auto"/>
+            <Button title="Scan Devices" onPress={ScanDevices}></Button>
         </View>
     );
 }
