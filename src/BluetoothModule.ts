@@ -80,7 +80,7 @@ export async function GetPlayerSettings(): Promise<void> {
     let characteristic = await connectedDevice.readCharacteristicForService(DeviceConfigurationService, PlayerSettingsCharacteristic);
     // console.log(`Player Settings Base64: ${characteristic.value}`);
     let byteArray = base64ToByteArray(characteristic.value!);
-    // console.log(`Player Settings ByteArray: [${byteArray}]`);
+    console.log(`Player Settings ByteArray: [${byteArray}]`);
     let hexadecimal = base64ToHex(characteristic.value!);
     console.log(`Player Settings Hexadecimal: 0x${hexadecimal}`);
 }
