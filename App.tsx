@@ -1,16 +1,14 @@
-import {Button, StyleSheet, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {
-    GetDeviceFactoryIdentification,
-    GetDeviceFirmwareInformation,
-    ScanDevices
-} from "./src/modules/BluetoothModule";
+    AutoConnect,
+} from "./src/BluetoothModule";
 
 export default function App() {
+    AutoConnect();
+
     return (
         <View style={styles.container}>
-            <Button title="Scan and Connect" onPress={ScanDevices}></Button>
-            <Button title="Device Factory Identification" onPress={GetDeviceFactoryIdentification}></Button>
-            <Button title="Device Firmware Identification" onPress={GetDeviceFirmwareInformation}></Button>
+            <Text>Furunculo</Text>
         </View>
     );
 }
