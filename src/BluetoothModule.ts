@@ -1,5 +1,4 @@
 import {BleManager, Device} from 'react-native-ble-plx';
-import {Buffer} from 'buffer'
 import {
     CarSettingsCharacteristic,
     DeviceAppearanceCharacteristic,
@@ -19,8 +18,9 @@ import {
     Service1,
     Service2
 } from "./DeviceConfiguration";
+import {base64ToHex, hexToBase64, sleep} from "./Utils";
 
-let manager: BleManager = new BleManager();
+const manager: BleManager = new BleManager();
 let connectedDevice: Device;
 
 export async function AutoConnect(): Promise<void> {
@@ -45,12 +45,12 @@ export async function AutoConnect(): Promise<void> {
             // await GetDeviceManufacturerName();
             // await GetDeviceFactoryIdentification();
             // await GetDeviceFirmwareInformation();
-            // await GetDeviceSettings();
+            await GetDeviceSettings();
             // await GetCarSettings();
-            await GetPlayerSettings();
+            // await GetPlayerSettings();
         }
     }).then(async () => {
-        await sleep(4000);
+        await sleep(10000);
         await manager.stopDeviceScan();
         if (connectedDevice === undefined) {
             console.log("No device found.");
@@ -150,22 +150,19 @@ export async function WritePlayerSettings(): Promise<void> {
     }
 }
 
-// Utils
-function sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+export async function IndicateDeviceSettings(): Promise<void> {
+    console.log("IndicateDeviceSettings");
+    try {
+        connectedDevice.monitorCharacteristicForService(Service2, DeviceSettingsCharacteristic, (error, characteristic) => {
+            if (error) {
+                console.log(error);
+                return;
+            }
 
-function base64ToByteArray(base64: string): Uint8Array {
-    const buffer = Buffer.from(base64, 'base64');
-    return new Uint8Array(buffer);
-}
-
-function base64ToHex(base64String: string): string {
-    const buffer = Buffer.from(base64String, 'base64');
-    return buffer.toString('hex').toUpperCase();
-}
-
-function hexToBase64(hexString: string): string {
-    const buffer = Buffer.from(hexString, 'hex');
-    return buffer.toString('base64');
+            const hexadecimal = base64ToHex(characteristic!.value!);
+            console.log(`Device Settings: 0x${hexadecimal}`);
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
