@@ -1,12 +1,13 @@
 import {BleManager, Device} from 'react-native-ble-plx';
 import {Buffer} from 'buffer'
 import {
-    CarSettingsCharacteristic,
-    DeviceConfigurationService,
-    DeviceFactoryIdentificationCharacteristic,
-    DeviceFirmwareInformationCharacteristic,
-    DeviceInformationService,
-    DeviceName, DeviceSettingsCharacteristic, PlayerSettingsCharacteristic
+    CarSettingsCharacteristic, DeviceAppearanceCharacteristic,
+    DeviceFactoryIdentificationCharacteristic, DeviceFirmwareInformationCharacteristic,
+    DeviceFirmwareRevisionCharacteristic, DeviceHardwareRevisionCharacteristic,
+    DeviceInformationService, DeviceManufacturerNameCharacteristic,
+    DeviceModelNumberCharacteristic, DeviceName, DeviceNameCharacteristic,
+    DeviceSerialNumberCharacteristic, DeviceSettingsCharacteristic,
+    GenericAccessService, PlayerSettingsCharacteristic, Service1, Service2
 } from "./DeviceConfiguration";
 
 let manager: BleManager = new BleManager();
@@ -25,6 +26,13 @@ export async function AutoConnect(): Promise<void> {
             connectedDevice = await device.connect();
             console.log(`Connected to device: ${device.id}`);
             await connectedDevice.discoverAllServicesAndCharacteristics();
+            // await GetDeviceName();
+            // await GetDeviceAppearance();
+            // await GetDeviceModelNumber();
+            // await GetDeviceSerialNumber();
+            // await GetDeviceFirmwareRevision();
+            // await GetDeviceHardwareRevision();
+            // await GetDeviceManufacturerName();
             await GetDeviceFactoryIdentification();
             await GetDeviceFirmwareInformation();
             await GetDeviceSettings();
@@ -40,51 +48,83 @@ export async function AutoConnect(): Promise<void> {
     });
 }
 
+// Generic Access Service
+export async function GetDeviceName(): Promise<void> {
+    const characteristic = await connectedDevice.readCharacteristicForService(GenericAccessService, DeviceNameCharacteristic);
+    const hexadecimal = base64ToHex(characteristic.value!);
+    console.log(`Device Name: 0x${hexadecimal}`);
+}
+
+export async function GetDeviceAppearance(): Promise<void> {
+    const characteristic = await connectedDevice.readCharacteristicForService(GenericAccessService, DeviceAppearanceCharacteristic);
+    const hexadecimal = base64ToHex(characteristic.value!);
+    console.log(`Device Appearance: 0x${hexadecimal}`);
+}
+
+// Device Information Service
+export async function GetDeviceModelNumber(): Promise<void> {
+    const characteristic = await connectedDevice.readCharacteristicForService(DeviceInformationService, DeviceModelNumberCharacteristic);
+    const hexadecimal = base64ToHex(characteristic.value!);
+    console.log(`Device Model Number: 0x${hexadecimal}`);
+}
+
+export async function GetDeviceSerialNumber(): Promise<void> {
+    const characteristic = await connectedDevice.readCharacteristicForService(DeviceInformationService, DeviceSerialNumberCharacteristic);
+    const hexadecimal = base64ToHex(characteristic.value!);
+    console.log(`Device Serial Number: 0x${hexadecimal}`);
+}
+
+export async function GetDeviceFirmwareRevision(): Promise<void> {
+    const characteristic = await connectedDevice.readCharacteristicForService(DeviceInformationService, DeviceFirmwareRevisionCharacteristic);
+    const hexadecimal = base64ToHex(characteristic.value!);
+    console.log(`Device Firmware Revision: 0x${hexadecimal}`);
+}
+
+export async function GetDeviceHardwareRevision(): Promise<void> {
+    const characteristic = await connectedDevice.readCharacteristicForService(DeviceInformationService, DeviceHardwareRevisionCharacteristic);
+    const hexadecimal = base64ToHex(characteristic.value!);
+    console.log(`Device Hardware Revision: 0x${hexadecimal}`);
+}
+
+export async function GetDeviceManufacturerName(): Promise<void> {
+    const characteristic = await connectedDevice.readCharacteristicForService(DeviceInformationService, DeviceManufacturerNameCharacteristic);
+    const hexadecimal = base64ToHex(characteristic.value!);
+    console.log(`Device Manufacturer Name: 0x${hexadecimal}`);
+}
+
+// Service 1
 export async function GetDeviceFactoryIdentification(): Promise<void> {
-    let characteristic = await connectedDevice.readCharacteristicForService(DeviceInformationService, DeviceFactoryIdentificationCharacteristic);
-    // console.log(`Device Factory Identification Base64: ${characteristic.value}`);
-    let byteArray = base64ToByteArray(characteristic.value!);
-    // console.log(`Device Factory Identification ByteArray: [${byteArray}]`);
-    let hexadecimal = base64ToHex(characteristic.value!);
-    console.log(`Device Factory Identification Hexadecimal: 0x${hexadecimal}`);
+    const characteristic = await connectedDevice.readCharacteristicForService(Service1, DeviceFactoryIdentificationCharacteristic);
+    const hexadecimal = base64ToHex(characteristic.value!);
+    console.log(`Device Factory Identification: 0x${hexadecimal}`);
 }
 
 export async function GetDeviceFirmwareInformation(): Promise<void> {
-    let characteristic = await connectedDevice.readCharacteristicForService(DeviceInformationService, DeviceFirmwareInformationCharacteristic);
-    // console.log(`Device Firmware Information Base64: ${characteristic.value}`);
-    let byteArray = base64ToByteArray(characteristic.value!);
-    // console.log(`Device Firmware Information ByteArray: [${byteArray}]`);
-    let hexadecimal = base64ToHex(characteristic.value!);
-    console.log(`Device Firmware Information Hexadecimal: 0x${hexadecimal}`);
+    const characteristic = await connectedDevice.readCharacteristicForService(Service1, DeviceFirmwareInformationCharacteristic);
+    const hexadecimal = base64ToHex(characteristic.value!);
+    console.log(`Device Firmware Information: 0x${hexadecimal}`);
 }
 
+// Service 2
 export async function GetDeviceSettings(): Promise<void> {
-    let characteristic = await connectedDevice.readCharacteristicForService(DeviceConfigurationService, DeviceSettingsCharacteristic);
-    // console.log(`Device Settings Base64: ${characteristic.value}`);
-    let byteArray = base64ToByteArray(characteristic.value!);
-    // console.log(`Device Settings ByteArray: [${byteArray}]`);
-    let hexadecimal = base64ToHex(characteristic.value!);
-    console.log(`Device Settings Hexadecimal: 0x${hexadecimal}`);
+    const characteristic = await connectedDevice.readCharacteristicForService(Service2, DeviceSettingsCharacteristic);
+    const hexadecimal = base64ToHex(characteristic.value!);
+    console.log(`Device Settings: 0x${hexadecimal}`);
 }
 
 export async function GetCarSettings(): Promise<void> {
-    let characteristic = await connectedDevice.readCharacteristicForService(DeviceConfigurationService, CarSettingsCharacteristic);
-    // console.log(`Car Settings Base64: ${characteristic.value}`);
-    let byteArray = base64ToByteArray(characteristic.value!);
-    // console.log(`Car Settings ByteArray: [${byteArray}]`);
-    let hexadecimal = base64ToHex(characteristic.value!);
-    console.log(`Car Settings Hexadecimal: 0x${hexadecimal}`);
+    const characteristic = await connectedDevice.readCharacteristicForService(Service2, CarSettingsCharacteristic);
+    const hexadecimal = base64ToHex(characteristic.value!);
+    console.log(`Car Settings: 0x${hexadecimal}`);
 }
 
 export async function GetPlayerSettings(): Promise<void> {
-    let characteristic = await connectedDevice.readCharacteristicForService(DeviceConfigurationService, PlayerSettingsCharacteristic);
-    // console.log(`Player Settings Base64: ${characteristic.value}`);
-    let byteArray = base64ToByteArray(characteristic.value!);
-    // console.log(`Player Settings ByteArray: [${byteArray}]`);
-    let hexadecimal = base64ToHex(characteristic.value!);
-    console.log(`Player Settings Hexadecimal: 0x${hexadecimal}`);
+    const characteristic = await connectedDevice.readCharacteristicForService(Service2, PlayerSettingsCharacteristic);
+    const hexadecimal = base64ToHex(characteristic.value!);
+    console.log(`Player Settings: 0x${hexadecimal}`);
 }
 
+// Utils
 function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
