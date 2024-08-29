@@ -1,13 +1,23 @@
 import {BleManager, Device} from 'react-native-ble-plx';
 import {Buffer} from 'buffer'
 import {
-    CarSettingsCharacteristic, DeviceAppearanceCharacteristic,
-    DeviceFactoryIdentificationCharacteristic, DeviceFirmwareInformationCharacteristic,
-    DeviceFirmwareRevisionCharacteristic, DeviceHardwareRevisionCharacteristic,
-    DeviceInformationService, DeviceManufacturerNameCharacteristic,
-    DeviceModelNumberCharacteristic, DeviceName, DeviceNameCharacteristic,
-    DeviceSerialNumberCharacteristic, DeviceSettingsCharacteristic,
-    GenericAccessService, PlayerSettingsCharacteristic, Service1, Service2
+    CarSettingsCharacteristic,
+    DeviceAppearanceCharacteristic,
+    DeviceFactoryIdentificationCharacteristic,
+    DeviceFirmwareInformationCharacteristic,
+    DeviceFirmwareRevisionCharacteristic,
+    DeviceHardwareRevisionCharacteristic,
+    DeviceInformationService,
+    DeviceManufacturerNameCharacteristic,
+    DeviceModelNumberCharacteristic,
+    DeviceName,
+    DeviceNameCharacteristic,
+    DeviceSerialNumberCharacteristic,
+    DeviceSettingsCharacteristic,
+    GenericAccessService,
+    PlayerSettingsCharacteristic,
+    Service1,
+    Service2
 } from "./DeviceConfiguration";
 
 let manager: BleManager = new BleManager();
@@ -33,10 +43,10 @@ export async function AutoConnect(): Promise<void> {
             // await GetDeviceFirmwareRevision();
             // await GetDeviceHardwareRevision();
             // await GetDeviceManufacturerName();
-            await GetDeviceFactoryIdentification();
-            await GetDeviceFirmwareInformation();
-            await GetDeviceSettings();
-            await GetCarSettings();
+            // await GetDeviceFactoryIdentification();
+            // await GetDeviceFirmwareInformation();
+            // await GetDeviceSettings();
+            // await GetCarSettings();
             await GetPlayerSettings();
         }
     }).then(async () => {
@@ -119,9 +129,25 @@ export async function GetCarSettings(): Promise<void> {
 }
 
 export async function GetPlayerSettings(): Promise<void> {
-    const characteristic = await connectedDevice.readCharacteristicForService(Service2, PlayerSettingsCharacteristic);
-    const hexadecimal = base64ToHex(characteristic.value!);
-    console.log(`Player Settings: 0x${hexadecimal}`);
+    try {
+        console.log("Reading Player Settings...");
+        const characteristic = await connectedDevice.readCharacteristicForService(Service2, PlayerSettingsCharacteristic);
+        const hexadecimal = base64ToHex(characteristic.value!);
+        console.log(`Player Settings: 0x${hexadecimal}`);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export async function WritePlayerSettings(): Promise<void> {
+    try {
+        const playerSettings = hexToBase64("00110011001100");
+        console.log(`Writing Player Settings: ${playerSettings}`);
+        await connectedDevice.writeCharacteristicWithoutResponseForService(Service2, PlayerSettingsCharacteristic, playerSettings);
+        console.log("Player Settings written successfully.");
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 // Utils
@@ -137,4 +163,9 @@ function base64ToByteArray(base64: string): Uint8Array {
 function base64ToHex(base64String: string): string {
     const buffer = Buffer.from(base64String, 'base64');
     return buffer.toString('hex').toUpperCase();
+}
+
+function hexToBase64(hexString: string): string {
+    const buffer = Buffer.from(hexString, 'hex');
+    return buffer.toString('base64');
 }
