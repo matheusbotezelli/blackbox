@@ -71,6 +71,7 @@ export async function AutoConnect(): Promise<void> {
 }
 
 async function MapCharacteristics(): Promise<void> {
+    console.log("Map Characteristics");
     const service1Characteristics = await mainDevice.characteristicsForService(Service1);
     const service2Characteristics = await mainDevice.characteristicsForService(Service2);
     const service3Characteristics = await mainDevice.characteristicsForService(Service3);
@@ -83,51 +84,51 @@ async function MapCharacteristics(): Promise<void> {
 }
 
 // Generic Access Service
-export async function GetDeviceName(): Promise<void> {
+export async function ReadDeviceName(): Promise<void> {
     const characteristic = await mainDevice.readCharacteristicForService(GenericAccessService, DeviceNameCharacteristic);
     const hexadecimal = base64ToHex(characteristic.value!);
     console.log(`Device Name: 0x${hexadecimal}`);
 }
 
-export async function GetDeviceAppearance(): Promise<void> {
+export async function ReadDeviceAppearance(): Promise<void> {
     const characteristic = await mainDevice.readCharacteristicForService(GenericAccessService, DeviceAppearanceCharacteristic);
     const hexadecimal = base64ToHex(characteristic.value!);
     console.log(`Device Appearance: 0x${hexadecimal}`);
 }
 
 // Device Information Service
-export async function GetDeviceModelNumber(): Promise<void> {
+export async function ReadDeviceModelNumber(): Promise<void> {
     const characteristic = await mainDevice.readCharacteristicForService(DeviceInformationService, DeviceModelNumberCharacteristic);
     const hexadecimal = base64ToHex(characteristic.value!);
     console.log(`Device Model Number: 0x${hexadecimal}`);
 }
 
-export async function GetDeviceSerialNumber(): Promise<void> {
+export async function ReadDeviceSerialNumber(): Promise<void> {
     const characteristic = await mainDevice.readCharacteristicForService(DeviceInformationService, DeviceSerialNumberCharacteristic);
     const hexadecimal = base64ToHex(characteristic.value!);
     console.log(`Device Serial Number: 0x${hexadecimal}`);
 }
 
-export async function GetDeviceFirmwareRevision(): Promise<void> {
+export async function ReadDeviceFirmwareRevision(): Promise<void> {
     const characteristic = await mainDevice.readCharacteristicForService(DeviceInformationService, DeviceFirmwareRevisionCharacteristic);
     const hexadecimal = base64ToHex(characteristic.value!);
     console.log(`Device Firmware Revision: 0x${hexadecimal}`);
 }
 
-export async function GetDeviceHardwareRevision(): Promise<void> {
+export async function ReadDeviceHardwareRevision(): Promise<void> {
     const characteristic = await mainDevice.readCharacteristicForService(DeviceInformationService, DeviceHardwareRevisionCharacteristic);
     const hexadecimal = base64ToHex(characteristic.value!);
     console.log(`Device Hardware Revision: 0x${hexadecimal}`);
 }
 
-export async function GetDeviceManufacturerName(): Promise<void> {
+export async function ReadDeviceManufacturerName(): Promise<void> {
     const characteristic = await mainDevice.readCharacteristicForService(DeviceInformationService, DeviceManufacturerNameCharacteristic);
     const hexadecimal = base64ToHex(characteristic.value!);
     console.log(`Device Manufacturer Name: 0x${hexadecimal}`);
 }
 
 // Service 1
-export async function GetDeviceFactoryIdentification(): Promise<void> {
+export async function ReadDeviceFactoryIdentification(): Promise<void> {
     try {
         const characteristic = await factoryIdentification.read();
         const hexadecimal = base64ToHex(characteristic.value!);
@@ -137,7 +138,7 @@ export async function GetDeviceFactoryIdentification(): Promise<void> {
     }
 }
 
-export async function GetDeviceFirmwareInformation(): Promise<void> {
+export async function ReadDeviceFirmwareInformation(): Promise<void> {
     try {
         const characteristic = await firmwareInformation.read();
         const hexadecimal = base64ToHex(characteristic.value!);
@@ -148,7 +149,7 @@ export async function GetDeviceFirmwareInformation(): Promise<void> {
 }
 
 // Service 2
-export async function GetDeviceSettings(): Promise<void> {
+export async function ReadDeviceSettings(): Promise<void> {
     try {
         const characteristic = await deviceSettings.read();
         const hexadecimal = base64ToHex(characteristic.value!);
@@ -158,7 +159,7 @@ export async function GetDeviceSettings(): Promise<void> {
     }
 }
 
-export async function GetCarSettings(): Promise<void> {
+export async function ReadCarSettings(): Promise<void> {
     try {
         const characteristic = await carSettings.read();
         const hexadecimal = base64ToHex(characteristic.value!);
@@ -168,7 +169,7 @@ export async function GetCarSettings(): Promise<void> {
     }
 }
 
-export async function GetPlayerSettings(): Promise<void> {
+export async function ReadPlayerSettings(): Promise<void> {
     try {
         console.log("Reading Player Settings...");
         const characteristic = await playerSettings.read();

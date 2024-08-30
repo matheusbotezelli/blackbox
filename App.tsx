@@ -1,12 +1,12 @@
 import {Button, StyleSheet, View} from 'react-native';
-import {AutoConnect, GetDeviceSettings} from "./src/BluetoothModule";
+import {AutoConnect, ReadDeviceSettings} from "./src/BluetoothModule";
 
 export default function App() {
     AutoConnect();
 
     return (
         <View style={styles.container}>
-            <Button title={"GetDeviceSettings"} onPress={GetDeviceSettings}/>
+            <Button title={"ReadDeviceSettings"} onPress={ReadDeviceSettings}/>
         </View>
     );
 }
