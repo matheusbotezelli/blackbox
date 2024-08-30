@@ -9,7 +9,7 @@
   </component>
   <component name="ReactNativePackager" nodePath="project" reactNativePackagePath="$PROJECT_DIR$/node_modules/react-native" workingDirectory="$PROJECT_DIR$">
     <scripts>
-      <item value="android" />
+      <item value="device" />
     </scripts>
   </component>
 </project>
